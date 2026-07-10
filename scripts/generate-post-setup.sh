@@ -8,7 +8,7 @@ set -euo pipefail
 SITE_CONFIG="src/data/site.config.ts"
 
 # ── Business info (from existing config) ───────────────────
-BUSINESS_NAME="$(rg 'name:\s*'\\''([^'\\'']+)' "$SITE_CONFIG" 2>/dev/null | head -1 | sed "s/.*'//;s/'//")"
+BUSINESS_NAME=$(awk -F"'" '/^[[:space:]]*name:[[:space:]]*\047/ { print $2; exit }' "$SITE_CONFIG" 2>/dev/null)
 BUSINESS_NAME="${BUSINESS_NAME:-Your Brand}"
 
 # ── Count placeholder slots ────────────────────────────────
