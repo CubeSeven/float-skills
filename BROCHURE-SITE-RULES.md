@@ -20,6 +20,10 @@ A portable contract for building **static brochure websites** (Astro + Tailwind 
 Target projects: local businesses, restaurants, clinics, shops, villas, studios,
 small service companies — typically 3–15 pages, mostly static, contact/WhatsApp-driven.
 
+**Trigger:** If the user says **"start"**, **"begin"**, or opens a new brochure-site
+request without details, immediately run §1 (Project kickoff protocol) before any code.
+Do not wait for a detailed brief — ask the questions from §1 first.
+
 When the agent detects a new project request that matches this shape, **load and obey
 this file before writing any code.** It exists to:
 
