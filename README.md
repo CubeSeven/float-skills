@@ -1,103 +1,48 @@
 # float-skills
 
-> **Float Creatives** — Brochure website toolkit
->
-> Portable AI agent rules, image pipeline scripts, and a self-contained **Astro + Tailwind CSS v4** starter template. Build production-ready brochure sites for local businesses, villas, restaurants, studios, and service companies with minimal manual work.
+Portable rules for building **brochure websites** the Float Creatives way.
 
----
+This repository is intentionally **just Markdown**. No code, no build step.
+Drop these files into (or alongside) any new client website and your AI coding
+tool will follow the same conventions automatically.
 
-## 🚀 Quick start (zero config)
+## What's inside
 
-```bash
-# 1. Clone this repo
-git clone git@github.com:CubeSeven/float-skills.git
-cd float-skills
-
-# 2. Install deps
-npm install
-
-# 3. Run the generator (answers 3 questions, scaffolds a ready project)
-npm run setup
-```
-
-**That's it.** You now have a working Astro + Tailwind v4 project with:
-- Data-driven content (`src/data/`)
-- Must-work interactive features (lightbox, mobile menu, accordion, scroll-reveal)
-- Image pipeline scripts (Unsplash stock + local optimization)
-- SEO/Schema/Accessibility baked in
-
----
-
-## 📦 What you get
-
-| Folder / File | Purpose |
+| File | Why it exists |
 |---|---|
-| `BROCHURE-SITE-RULES.md` | The single source of truth — portable rules file for any AI agent (Cursor, Claude, Copilot, opencode, etc.) |
-| `scripts/setup.sh` | One-command new-project scaffolder |
-| `scripts/sync-rules.sh` | Mirrors rules file to `AGENTS.md`, `CLAUDE.md`, `.cursorrules` |
-| `scripts/fetch-unsplash.mjs` | Fetches contextual stock photos (hotlinked per Unsplash ToS) |
-| `scripts/optimize-images.mjs` | Sharp-based WebP/AVIF conversion for local photos |
-| `scripts/process-images.mjs` | Generates responsive variants + updates `gallery.ts` |
-| `scripts/validate-project.sh` | Pre-launch audit (build, placeholders, assets, data files) |
-| `scripts/generate-post-setup.sh` | Auto-generates `POST-SETUP.md` hand-off checklist |
-| `template-project/` | Complete Astro + Tailwind v4 starter (copy this to start) |
+| `BROCHURE-SITE-RULES.md` | The master rulebook: stack, must-work interactive behavior, content model, SEO, accessibility, build gate. **Read this first.** |
+| `AGENTS.md` | Pointer to the rules for GitHub Copilot / generic agents |
+| `CLAUDE.md` | Pointer to the rules for Claude Code |
+| `.cursorrules` | Pointer to the rules for Cursor |
+| `CLIENT-BRIEF.md` | A fill-once form; hand it to the AI with the rules |
+| `README.md` | This file |
 
----
+## How to use it
 
-## 🛠️ Typical workflow
+1. **Start a new client site** in your normal way (Astro, plain HTML, whatever
+   the brief calls for).
+2. **Copy these files** into that project:
+   - `BROCHURE-SITE-RULES.md` (required)
+   - the matching pointer for your tool (`AGENTS.md`, `CLAUDE.md`, or
+     `.cursorrules`)
+   - `CLIENT-BRIEF.md`
+3. **Fill in `CLIENT-BRIEF.md`** with the business facts.
+4. **Tell the AI**: "Build this brochure site from `CLIENT-BRIEF.md` and
+   `BROCHURE-SITE-RULES.md`. Propose the page structure before coding."
+5. The AI follows the rules and builds **only the pages the brief needs** —
+   no forced services/gallery/contact template.
 
-```bash
-# In a fresh terminal
-cd float-skills
-npm run setup                    # → creates ./my-villa-project/
+## Why the rules file is the whole point
 
-cd my-villa-project
-npm run dev                      # → preview at localhost:4321
+Different AI tools look for different filenames (`AGENTS.md`, `CLAUDE.md`,
+`.cursorrules`). They all just point back to `BROCHURE-SITE-RULES.md`, so you
+keep **one source of truth** and every tool behaves the same.
 
-# When you have client photos
-npm run optimize-images dir Images/
+## Notes
 
-# When you need stock photos (if UNSPLASH_ACCESS_KEY set)
-npm run fetch-images "greek island villa terrace" 6
-
-# Before deploying
-npm run validate                 # → shows any remaining TODOs
-npm run build                    # → production build in dist/
-```
-
----
-
-## 📚 Documentation
-
-| File | Description |
-|---|---|
-| `BROCHURE-SITE-RULES.md` | Full protocol: kickoff interview, hard-locked stack, interactive contract, reference patterns, SEO, accessibility, build gate |
-| `docs/ARCHITECTURE.md` | How the pieces fit together (data → components → pages → scripts) |
-| `docs/DECISIONS.md` | Why each library was chosen (Astro, Tailwind v4, Swiper, Sharp, etc.) |
-| `docs/TROUBLESHOOTING.md` | Common issues + fixes (blank lightbox, mobile menu clipping, icon sets, etc.) |
-
----
-
-## 🤖 Using with AI agents
-
-This repo **entire point of `BROCHURE-SITE-RULES.md` is that any AI coding agent can read it and **behave correctly** without you explaining anything.
-
-| Tool | What to do |
-|---|---|
-| **Cursor** | Run `scripts/sync-rules.sh` → creates `.cursorrules` |
-| **Claude Code** | Creates `CLAUDE.md` automatically |
-| **GitHub Copilot** | Creates `AGENTS.md` automatically |
-| **opencode** | Uses `AGENTS.md` |
-| **Windsurf** | Uses `.windsurfrules` |
-
-**Just run `scripts/sync-rules.sh` once per project** — it symlinks the rules file to whatever filename your tool expects.
-
----
-
-## 📄 License
-
-MIT — free to use, modify, and distribute.
-
----
-
-**Float Creatives** — Panos · Henna · Skiathos tourism clients
+- The rules assume Astro + Tailwind v4 by default but are written so the agent
+  can adapt to another stack if the brief requires it.
+- Keep business facts in a single data file; never hardcode phone/email/address
+  in components.
+- No fake reviews, no invented bookings, no analytics/pixels unless the client
+  explicitly asks.

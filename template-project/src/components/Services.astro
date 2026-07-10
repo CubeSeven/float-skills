@@ -1,5 +1,0 @@
----
-import { services } from '@data/content/services';
-import { Icon } from 'astro-icon/components';
----
-<section class="mx-auto max-w-6xl px-5 py-20" data-motion aria-labelledby="services-heading"><h2 id="services-heading" class="font-serif text-4xl">What we offer</h2><div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{services.map((service) => <article class="rounded-2xl border border-black/5 p-6"><Icon name={service.icon} class="h-8 w-8 text-brand-600" /><h3 class="mt-4 font-serif text-xl">{service.title}</h3><p class="mt-2 text-ink-muted">{service.description}</p></article>)}</div></section>

@@ -1,1 +1,0 @@
-export function formatPhone(raw: string): string { const cleaned = raw.replace(/\D/g, ''); if (cleaned.startsWith('30')) return `+30 ${cleaned.slice(2, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`; return cleaned; }
