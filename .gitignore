@@ -1,0 +1,26 @@
+# Secrets
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.build/
+
+# Caches
+content/images/.unsplash-cache.json
+.astro/
+
+# Scratch / setup drafts
+content/.setup-scratch.json
+
+# OS / editor
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# Generated site projects (keep the template, not instances)
+# projects/  <- uncomment if you scaffold sites inside the repo

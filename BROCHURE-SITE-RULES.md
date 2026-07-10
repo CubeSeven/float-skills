@@ -112,7 +112,7 @@ Then, and only then, scaffold.
 | CSS | **Tailwind CSS v4** (via `@tailwindcss/vite`) | Token-friendly, no class-name sprawl |
 | Slider/carousel | **Swiper** (`swiper` pkg) | Mature, responsive, a11y-aware, works without React |
 | Icons | **astro-icon** + one icon set (lucide / iconify) | Single import path, tree-shaken SVGs |
-| Sitemap | **astro-sitemap** | zero-config, builds `sitemap-index.xml` |
+| Sitemap | **@astrojs/sitemap** | official Astro integration, builds `sitemap-index.xml` |
 | Language | TypeScript, `as const` data files | typed content, autocomplete for handoff |
 | Fonts | Self-hosted `.woff2` with `font-display: swap` + unicode-range | fast, private, no Google Fonts CLS/legal issues |
 | Images | Script-generated responsive `.webp`/`.avif` variants | never ship raw 5 MB JPEGs |
@@ -319,7 +319,7 @@ should stay close to avoid re-deriving working solutions.
 ```js
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import sitemap from 'astro-sitemap';
+import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 
 export default defineConfig({
@@ -1148,7 +1148,7 @@ recognisable as deliberate interim art — designers/clients immediately underst
 - JSON-LD `LocalBusiness` (or `Restaurant`, `Store`, `HealthAndBeautyBusiness`,
   `LodgingBusiness` per brief) on every page via the generator.
 - BreadcrumbList on every interior page.
-- `sitemap-index.xml` via astro-sitemap.
+- `sitemap-index.xml` via `@astrojs/sitemap`.
 - `/rss.xml` if blog enabled — `@astrojs/rss`.
 - `robots.txt` allowing all, pointing to sitemap.
 - `manifest.webmanifest` for PWA installability (themeColor from `SITE.seo.themeColor`).

@@ -1,0 +1,4 @@
+---
+import { SITE } from '@data/site.config';
+---
+<section id="main" class="relative flex min-h-[70vh] items-center justify-center overflow-hidden" data-motion><img src={SITE.heroImage.src} alt={SITE.heroImage.alt} width={SITE.heroImage.w} height={SITE.heroImage.h} class="absolute inset-0 h-full w-full object-cover" /><div class="absolute inset-0 bg-black/40"></div><div class="relative z-10 px-5 text-center text-white"><p class="font-serif text-5xl md:text-6xl">{SITE.name}</p><p class="mx-auto mt-4 max-w-xl text-lg text-white/85">{SITE.tagline}</p><a href="/contact/" class="mt-8 inline-block rounded-full bg-accent-500 px-8 py-3 font-medium text-white">Get in touch</a></div></section>

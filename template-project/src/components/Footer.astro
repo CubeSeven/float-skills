@@ -1,0 +1,4 @@
+---
+import { SITE } from '@data/site.config';
+---
+<footer class="bg-brand-900 py-12 text-white"><div class="mx-auto grid max-w-6xl gap-6 px-5 md:grid-cols-2"><div><p class="font-serif text-xl">{SITE.name}</p><p class="mt-2 text-white/70">{SITE.tagline}</p></div><address class="not-italic text-white/70"><a href={`tel:+${SITE.business.contact.phone.raw}`}>{SITE.business.contact.phone.display}</a><br /><a href={`mailto:${SITE.business.contact.email}`}>{SITE.business.contact.email}</a><br />{SITE.business.address.locality}</address></div></footer>

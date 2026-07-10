@@ -1,0 +1,7 @@
+---
+import { faqItems } from '@data/content/faq';
+---
+<section class="mx-auto max-w-3xl px-5 py-20" aria-labelledby="faq-heading"><h2 id="faq-heading" class="font-serif text-4xl">Questions, answered</h2><div class="mt-8 divide-y divide-black/10">{faqItems.map((item, index) => <div><button class="faq-trigger flex w-full items-center justify-between py-5 text-left font-medium" aria-expanded="false" aria-controls={`faq-${index}`}>{item.question}<span>+</span></button><div id={`faq-${index}`} class="faq-accordion"><div class="faq-accordion-inner pb-5 text-ink-muted">{item.answer}</div></div></div>)}</div></section>
+<script>
+  document.querySelectorAll('.faq-trigger').forEach((button) => button.addEventListener('click', () => { const open = button.getAttribute('aria-expanded') === 'true'; document.querySelectorAll('.faq-trigger').forEach((other) => { other.setAttribute('aria-expanded', 'false'); other.nextElementSibling?.classList.remove('open'); }); if (!open) { button.setAttribute('aria-expanded', 'true'); button.nextElementSibling?.classList.add('open'); } }));
+</script>

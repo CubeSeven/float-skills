@@ -1,0 +1,56 @@
+---
+import { galleryImages } from '@data/content/gallery';
+const galleryData = JSON.stringify(galleryImages);
+---
+<div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
+  {galleryImages.map((image, index) => (
+    <div class="js-gallery-item group relative overflow-hidden rounded-3xl" data-index={index}>
+      <img src={image.src} alt={image.alt} width={image.w} height={image.h} loading={index < 6 ? "eager" : "lazy"} decoding="async" class="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+    </div>
+  ))}
+</div>
+<div id="lightbox" class="lightbox-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-6" role="dialog" aria-modal="true" aria-label="Image gallery lightbox" data-images={galleryData}>
+  <button id="lb-close" class="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white" aria-label="Close lightbox">×</button>
+  <div id="lb-caption" class="lightbox-caption absolute bottom-6 max-w-2xl text-center text-white"></div>
+  <img id="lb-img" src="" alt="" class="lightbox-image max-h-full max-w-full rounded-3xl object-contain" />
+</div>
+<script is:inline define:vars={{ galleryData }}>
+  (function () {
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox) return;
+    let images = [];
+    try { images = JSON.parse(galleryData || '[]'); } catch (e) { return; }
+    let current = 0;
+    const imgEl = document.getElementById('lb-img');
+    const captionEl = document.getElementById('lb-caption');
+    function update(index) {
+      if (!images.length) return;
+      current = (index + images.length) % images.length;
+      const image = images[current];
+      imgEl.src = image.src;
+      imgEl.alt = image.alt || '';
+      captionEl.textContent = image.alt || '';
+    }
+    function open(index) {
+      update(index);
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKey);
+    }
+    function close() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+    }
+    function onKey(event) {
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowRight') update(current + 1);
+      if (event.key === 'ArrowLeft') update(current - 1);
+    }
+    document.querySelectorAll('.js-gallery-item').forEach(function (item, index) {
+      item.addEventListener('click', function () { open(index); });
+    });
+    const closeBtn = document.getElementById('lb-close');
+    if (closeBtn) closeBtn.addEventListener('click', close);
+  })();
+</script>

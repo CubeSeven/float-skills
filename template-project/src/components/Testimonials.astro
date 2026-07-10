@@ -1,0 +1,4 @@
+---
+import { testimonials } from '@data/content/testimonials';
+---
+<section class="bg-surface py-20" data-motion aria-labelledby="reviews-heading"><div class="mx-auto max-w-4xl px-5 text-center"><h2 id="reviews-heading" class="font-serif text-4xl">What clients say</h2><div class="mt-10 grid gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">{testimonials.map((review) => <blockquote class="rounded-2xl border border-black/5 p-6">{'★'.repeat(review.rating)}<p class="mt-3 text-ink-muted">{review.quote}</p><footer class="mt-4 text-sm">— {review.name}, {review.source}</footer></blockquote>)}</div></div></section>

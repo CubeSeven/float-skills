@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import { SITE, canonicalUrl, generateBusinessSchema, generateWebsiteSchema } from '@data/site.config';
+interface Props { title?: string; description?: string; path?: string; }
+const { title = SITE.name, description = SITE.seo.defaultDescription, path = '/' } = Astro.props;
+---
+<!doctype html>
+<html lang={SITE.language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={SITE.seo.themeColor} />
+    <link rel="canonical" href={canonicalUrl(path)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title} {SITE.seo.titleSuffix}</title>
+    <meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:type" content="website" />
+    <script type="application/ld+json" set:html={JSON.stringify(generateBusinessSchema())} />
+    <script type="application/ld+json" set:html={JSON.stringify(generateWebsiteSchema())} />
+  </head>
+  <body class="bg-surface text-ink">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: 0.05 });
+    document.querySelectorAll('[data-motion]').forEach((el) => observer.observe(el));
+  } else document.querySelectorAll('[data-motion]').forEach((el) => el.classList.add('visible'));
+</script>
