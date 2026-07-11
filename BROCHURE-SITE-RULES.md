@@ -53,7 +53,16 @@ Ask, in one message:
   fetches these and auto-extracts name, address, phone, hours, geo coordinates, rating,
   review snippets, service list and social handles so the user doesn't retype them
   (see §7.13). **Do not skip this ask** — it saves ~80% of Phase B/C typing.
-- A design reference? (image, URL, or "you decide")
+- **A design reference?** The agent should *suggest* the user provide a **`design.md` file**
+  (Google's DESIGN.md token spec — palette, typography, spacing, radii, shadows). If the user
+  doesn't have one, point them to a template. Accepted forms (any one is enough):
+  - A `design.md` file path — read it as the **single source of truth** for design tokens;
+    it **overrides** the §7.3 defaults. Validate before use.
+  - An image, mood-board, screenshot, competitor URL, or Figma link
+  - Or **"you decide"** — the agent derives tokens from the brief per §7.3
+  - **Conflict rule:** `design.md` wins for tokens; the brief wins for content/voice.
+  - **Validation:** if a provided `design.md` is malformed, the agent **refuses to build**
+    and returns a one-line fix request before any code is written.
 - An images folder path? (logo + photos) — if none, agent uses grey placeholders first,
   then offers to pull contextual stock from Unsplash (see §7.12)
 - A brand palette? (hex codes, reference site, or "you decide")
@@ -335,8 +344,14 @@ export default defineConfig({
 
 ### 7.3 Tailwind v4 token file (`src/styles/theme.css`)
 Register brand color scale, fonts, animations as `@theme` tokens so they become
-Tailwind utilities (`bg-brand-500`, `font-sans`, `animate-float`). **Exact hex /
-font names are the agent's creative decision per brief.** Pattern:
+Tailwind utilities (`bg-brand-500`, `font-sans`, `animate-float`).
+
+**If a validated `design.md` was provided in §1 (Step 0), read all tokens from it —**
+it becomes the **single source of truth** for palette, type scale, spacing, radii,
+and shadows. The pattern below shows the expected shape; fill from `design.md` values.
+
+**If no validated `design.md`**, exact hex / font names are the agent's creative decision
+per brief. Pattern:
 ```css
 @theme {
   --color-brand-50: color-mix(in srgb, var(--brand-base) 5%, white);
