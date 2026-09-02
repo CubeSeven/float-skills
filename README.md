@@ -14,6 +14,24 @@ The agent reads `BROCHURE-SITE-RULES.md`, then asks everything it needs: busines
 
 No template pages are forced. The brief and answers decide the site.
 
+## Current stack (verified 2026-09-03 — re-check with `npm view <pkg> version` before each project)
+
+The rules file pins no versions on purpose; this table is a snapshot to sanity-check against, not a source of truth.
+
+| Layer | Package | Verified latest |
+|---|---|---|
+| Framework | `astro` | 7.2.10 |
+| CSS | `tailwindcss` + `@tailwindcss/vite` | 4.3.3 |
+| Slider/carousel | `swiper` | 14.2.0 |
+| Icons | `lucide-react` / `@lucide/astro` | 1.39.0 |
+| Astro × React | `@astrojs/react` | 6.0.5 |
+| Motion (React sites) | `framer-motion` | 13.2.0 |
+| Sitemap | `@astrojs/sitemap` | latest |
+| TypeScript | `typescript` | newest **6.x** (NOT 7.x — `@astrojs/check` compat) |
+| Node (engines) | — | ≥ 22.12.0 |
+
+Before scaffolding: `npm view <pkg> version` for each — use what npm reports today, never versions from an older project.
+
 ## Optional local setup
 
 ```bash

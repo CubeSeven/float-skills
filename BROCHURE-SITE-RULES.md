@@ -133,6 +133,16 @@ Then, and only then, scaffold.
 
 **Do not substitute these without a stated, user-approved reason.**
 
+### 2.1 Versions — always latest stable, never copied from old projects
+
+This file intentionally pins **no dependency versions**, so it cannot go stale. Follow this protocol at scaffold time so new projects never start on old versions:
+
+1. **Verify before writing `package.json`:** run `npm view <pkg> version` for every dependency (astro, tailwindcss, @tailwindcss/vite, swiper, lucide-react, @astrojs/sitemap, etc.) and use what npm reports **today**.
+2. **Never copy version ranges** from an older project, from agent memory, or from a tutorial — they are stale by definition.
+3. **Newer major wins:** if a package's latest is a higher major than the stack table implies, use the new major and read its migration notes if `npm run build` complains.
+4. **TypeScript stays on the newest 6.x** while `@astrojs/check` declares `typescript@^5.0.0 || ^6.0.0`; do not jump to 7.x until `@astrojs/check` supports it.
+5. **Keep the starter templates current too:** when a dependency releases a new major, upgrade it in the base template and re-run `npm run build` + a dev-server smoke test **before** scaffolding new client projects from it. A stale template is a stale project.
+
 ### 3. Extendable — but with justification
 
 The agent MAY add mature, well-supported libraries when they materially serve the brief.
