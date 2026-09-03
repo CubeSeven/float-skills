@@ -71,6 +71,10 @@ Ask, in one message:
   https://unsplash.com/oauth/applications. If provided, agent fetches contextual stock
   photos matched to the brief; if not, agent uses grey placeholders + flags them in
   POST-SETUP.md for later swap.)
+- A design-attitude pick, one word: **sharp/editorial** (square corners, hairline
+  dividers, restrained ornament) or **soft/rounded** (chips, capsules, friendly).
+  Default per brief — leisure/premium defaults to sharp editorial. Asking this one
+  question prevents a full visual rework later.
 
 ### Phase A — Identity & scope
 - Business name, short tagline, one-line description (for SEO meta)
@@ -88,6 +92,15 @@ Ask, in one message:
 - Service areas (list of neighbourhoods/regions served)
 - Social links (Facebook, Instagram, others — empty = skip)
 - Year established, price range symbol
+
+> **Hard-mandatory contact facts.** If the reference link does not provide email,
+> WhatsApp and the exact location pin, ask the user directly in the same message —
+> never ship a placeholder for a fact the brief implies exists (email, phone,
+> WhatsApp, exact coordinates). For the pin, prefer a Google Maps place link from
+> the user; it is the authoritative geo source. If none is given and you resolve a
+> text address via Nominatim, SHOW the resolved lat/lng to the user for
+> confirmation before building (Nominatim returns "nearest place" approximations).
+> Placeholders are only allowed for fields the user explicitly said do not exist.
 
 ### Phase C — Content
 - Services or product categories (name + 1-line description each, or "skip → placeholders")
@@ -108,6 +121,11 @@ Ask, in one message:
   - If no/empty → agent generates grey SVG placeholders for every image slot
     (hero, gallery, services, about, OG) so the build passes and layout is correct.
 - Brand primary hex (or "use neutral default, agent picks accent")
+- If the agent cannot visually inspect images (no vision model): DO NOT guess which
+  photo fills which slot. Generate a numbered contact sheet from the image folder and
+  ask the client for sheet-numbers-per-slot (or direct URLs) for hero, about, and
+  each tile/galley position. Until answered, use folder order as an explicitly
+  flagged assumption in POST-SETUP — never present guessed mappings as final.
 
 ### Confirm before coding
 Print a one-paragraph plan: page list, major sections per page, third-party libraries
@@ -221,6 +239,11 @@ For each, two columns: **Behaviour (hard rule)** and **Recommended lib (soft def
 - **Behaviour:** client-side validation (required, email format, min length); success
   state replaces the form on submit; error states inline per field; no backend code —
   integrate a static provider (Web3Forms/Formspree) or a `mailto:` fallback.
+  - Required fields are a brief decision, never a blanket: message/notes fields are
+   OPTIONAL by default unless the client says otherwise, and the required set lives
+   in a data file, not scattered `required` attributes. After any edit that touches a
+   multi-line inline script, run `npm run build` immediately — string-patching out a
+   branch commonly leaves unbalanced braces.
 - **Library:** vanilla; provider SDK only if needed.
 
 ### 4.8 Maps
@@ -821,6 +844,24 @@ backdrop-blur`). Text on it must be light — using the site's body text color
 (which is dark-on-light for normal reading) on the overlay will fail WCAG
 contrast. Pick light-on-dark colors for all overlay text, links, and icons.
 
+#### Rule 8 — Scoped link colors + measured contrast
+
+Never style overlay links with a bare element selector (`#overlay a { color: … }`) —
+its specificity beats any utility color on a button/CTA inside the overlay, producing
+invisible text (e.g. brand-color text on a cream button) that looks fine in source.
+Scope with classes (`#overlay a.menu-link`, `#overlay a.menu-cta`). After styling,
+MEASURE contrast of every contrasting element (buttons, links, text on glass) against
+its own background and require WCAG ≥ 4.5:1 (7:1 for large text) — compute the ratio,
+never eyeball it.
+
+#### Rule 9 — Scroll containment
+
+Lock BOTH `document.documentElement` and `document.body` to `overflow: hidden` while
+the overlay is open, and make the overlay itself the scroll container
+(`overflow-y: auto; overscroll-behavior: contain`). Verify at 390×844: while open,
+`window.scrollY` must not change under any wheel/touch input; after close, the page
+must scroll again.
+
 ---
 
 **Minimal JS skeleton** (escort, close-on-link, close-on-ESC):
@@ -886,6 +927,8 @@ for prominent contact prompts on mobile.
 | `pointer-events:none` in base + `all` in `.open` | Dead clicks on page behind invisible overlay |
 | `querySelectorAll`, not `querySelector` | X button unresponsive |
 | `0s !important` delay on close animation | Links trail overlay fade-out |
+| Unscoped `#overlay a` selectors | Invisible CTAs (specificity beats utilities) |
+| Scroll lock applied to `body` only | Background scrolls behind the open overlay |
 
 ### 7.8 Accordion (the grid-template-rows trick)
 ```css
@@ -1126,6 +1169,10 @@ hallucination (the source of truth becomes the link itself).
    extracted values to the user for confirmation, since Google/FB often return
    stale or partial hours.
 
+5. **Geo source rule:** a user-provided Google Maps place link beats any geocoder.
+   Resolved coordinates that were never confirmed by the user must be listed in
+   POST-SETUP as "verify the pin", never silently shipped as final.
+
 **Geometry caveat:** Google Maps embed URLs encode lat/lng inside the `!1d!2d!3d`
 pb tokens; parse the segment after `!3d` (lat) and `!2d` (lng) — but prefer the
 `?q=<lat>,<lng>` form if the user pastes a `maps.google.com/?q=...` share link, or
@@ -1166,6 +1213,39 @@ gate and ship to production.
 **Why logoipsum over a generic wordmark:** logoipsum placeholders are
 recognisable as deliberate interim art — designers/clients immediately understand
 "this needs replacement", unlike a styled wordmark which can read as "done".
+
+---
+
+### 7.15 Live UX patterns (header auto-hide, floating contact CTA, scrollspy)
+
+Tested defaults for common live-UX requests. Violating the invariants produces
+silent broken states (header that never reappears, CTA that blocks clicks).
+
+**Header auto-hide (scroll direction):**
+- Hide only on clearly downward motion (`delta > +10`) and `y > 80`.
+- Show on ANY upward motion (`delta < -3`), at `y < 80`, or at the top.
+  ASYMMETRIC thresholds are mandatory — symmetric ones (e.g. ±6) trap the header
+  stuck-hidden on trackpads/smooth mice whose per-event deltas are small.
+- Respect `prefers-reduced-motion: reduce` — never hide for those users.
+- Verify with REAL wheel/touch gestures in a browser (never `scrollTo` jumps,
+  which mask threshold bugs), including a slow, small-delta scroll-up.
+
+**Floating contact CTA:**
+- Appear after ~360px of scroll so it never covers the hero CTA.
+- Hidden state must be `opacity:0; pointer-events:none` PLUS `aria-hidden="true"`
+  and `tabindex="-1"`, all toggled together when shown (visible =
+  `pointer-events:all`, `aria-hidden="false"`, `tabindex="0"`).
+
+**Scrollspy (active nav on scroll):**
+- Initialize after DOMContentLoaded — inline scripts run before later sections
+  exist, and observing null elements silently kills the observer.
+- IntersectionObserver with a middle-viewport band rootMargin
+  (`-40% 0px -55% 0px`); toggle one active class on nav links.
+
+**Tested heading decoration:** gold square marker (7×7px) before uppercase,
+letterspaced overline labels + a short (3rem × 3px) gold underline bar beneath
+section titles (centered or left, matching alignment). Avoid dash/rule ornaments
+that read as boundary lines — clients perceive them as unfinished.
 
 ---
 
@@ -1216,6 +1296,17 @@ rg -n 'YOUR_|@example\.com|Lorem|TODO|FIXME' src/ public/   # catch other un-rep
 ```
 Any non-zero count is fine for a hand-off build — but every hit MUST be reflected in
 POST-SETUP.md (§12) so the human knows what's still pending.
+
+**Runtime & asset verification (before hand-off):**
+1. **Asset-reference integrity** — parse built HTML/CSS for every `/images/…` (and
+   other asset) reference and assert each maps to an existing file on disk. A
+   ~10-line script; catches 404s before the human does.
+2. **Icon names** — verify every icon name used exists in its iconify collection
+   (`@iconify-json/<set>/icons.json`) before relying on the build.
+3. **Browser E2E on the BUILT output** (not just dev): open at 390×844 and desktop,
+   click menu open/close, open the lightbox, then assert zero console errors /
+   uncaught exceptions and zero failed network requests on a cold load (cache
+   cleared). Test scroll-dependent UX with real wheel/touch gestures.
 
 Self-check the agent must run mentally after each section:
 1. Did the build pass?
@@ -1343,7 +1434,10 @@ brief provides the *meaning*.
 - Don't autoplay motion without `prefers-reduced-motion` check.
 - Don't import a React/Vue component for what a 30-line Astro component can do.
 - Don't add a chat widget, analytics, or pixel without user confirmation.
-- Don't use `npx astro` — use `node_modules/.bin/astro` (version drift protection).
+- Don't use `npx astro` — use `node_modules/.bin/astro` (version drift protection).- Don't interpolate Astro `{expressions}` inside `<script is:inline>` — inline
+  scripts pass through RAW; carry config via `data-*` attributes on elements.
+- Don't reference icon names you haven't verified against the installed icon
+  collection (builds fail with "Unable to locate…").
 - Don't delete or rename conventions this project already established without flagging.
 
 ---
