@@ -1,3 +1,8 @@
+> **⚠️ Superseded (2026-10-22).** This repo no longer holds the current version.
+> Everything now lives in one place: **`floatcreatives/website-skills`** (private, org) —
+> rules, Astro starter, and the per-project template.
+> Read `BROCHURE-SITE-RULES.md` from there before building anything.
+
 # float-skills
 
 Portable brochure-site rules for AI coding agents.
